@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="member">
+    <select id="memberList" resultType="com.cooking.model.dto.MemberDTO">
+        select * from member order by username
+    </select>
+
+    <insert id="insertMember">
+        <selectKey order="BEFORE" resultType="int" keyProperty="idx">SELECT IFNULL(MAX(idx), 0) + 1 FROM member </selectKey>
+        insert into member (idx, userid, passwd, username, phone, email, join_date)
+        values (#{idx}, #{userid}, #{passwd}, #{username}, #{phone}, #{email}, DATE_FORMAT(now(), '%Y-%m-%d %H:%i:%s'))
+    </insert>
+
+    <select id="viewMember" resultType="com.cooking.model.dto.MemberDTO">
+        select * from member
+        where idx=#{idx}
+    </select>
+
+    <select id="checkPw" resultType="int">
+        select count(*) from member
+        where userid=#{userid} and passwd=#{passwd}
+    </select>
+
+    <select id="loginCheck" resultType="com.cooking.model.dto.MemberDTO">
+        select * from member
+        where userid=#{userid} and passwd=#{passwd}
+    </select>
+</mapper>
